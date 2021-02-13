@@ -165,7 +165,7 @@ let checkIfIdExistsAndDelete =(res,id) =>{
 
 // Routes
 router.get('/',async (req,res)=>{
-  console.log("console log-- GET REQUEST")
+  //console.log("console log-- GET REQUEST")
   return getAllMemes(res);
 })
 
@@ -188,7 +188,7 @@ router.post('/',[
   if(!errors.isEmpty()){
     return res.status(422).json({errors: errors.array()});
   }
-  console.log("console log-- POST REQUEST");
+  //console.log("console log-- POST REQUEST");
   const {name,url,caption} = req.body;
   const data = {name,url,caption};
   return postIfDuplicateDoesNotExist(req,res);
@@ -224,7 +224,7 @@ router.patch('/:id',async (req,res)=>{
 })
 
 router.get('/:id',async (req,res)=>{
-  console.log('GET request single meme');
+  //console.log('GET request single meme');
   const id = req.params.id;
   return checkIfIdExistsAndPost(res,id);
 })
