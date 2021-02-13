@@ -13,7 +13,6 @@ tags:
   - name: 'frontendDisplay'
     description: 'Frontend Display routes'
 schemes:
-  - 'https'
   - 'http'
 paths:
   /memes:

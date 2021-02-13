@@ -5,4 +5,4 @@ cwd=$(pwd)
 cd $cwd/backend
 
 # Run the server
-npm run
+npm run start

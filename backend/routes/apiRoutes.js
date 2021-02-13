@@ -10,7 +10,7 @@ let getSQLResults =(res,sql,params)=>{
   if(params.order=='desc') sql=  sql + String(params.order)+' ';
   let tmp = 'LIMIT '+String(params.take)+' OFFSET '+String(params.skip);
   sql = sql + tmp;
-  console.log(sql);
+  // console.log(sql);
   return db.all(sql,[],(err,rows) =>{
     if(err){
       res.status(400).json({error:err.message});
@@ -35,7 +35,7 @@ let getTotalPages = (res,take) =>{
           res.status(200).json({totalPages:totalPages});
           return;
         }
-        console.log(typeof(take));
+        // console.log(typeof(take));
         totalPages= Number((rows.length/take).toFixed())+1;
         res.status(200).json({totalPages:totalPages});
   });
@@ -46,7 +46,7 @@ router.get('/memes',(req,res) =>{
 })
 
 router.get('/memes/display',(req,res) =>{
-  console.log('api route called\n');
+  // console.log('api route called\n');
   let {sortBy,order,skip,take} = req.query;
   /* Validation of inputs */
   if(!sortBy || !(sortBy=='id' || sortBy=='caption' || sortBy=='name'))sortBy ='id';
@@ -61,7 +61,7 @@ router.get('/memes/display',(req,res) =>{
 })
 
 router.get('/memes/totalPages',(req,res) =>{
-  console.log('api route to get number of pages called\n');
+  // console.log('api route to get number of pages called\n');
   let {take} = req.query;
   if(!take) take=10;
   take = Number(take);

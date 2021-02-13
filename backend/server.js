@@ -21,11 +21,11 @@ app.use('/api',require('./routes/apiRoutes'));
 
 
 
-app.get('/',(req,res) =>{
-  res.status(200).json({owner:'Prateek Divyanshu',version:'0.0.1',message:'Welcome to Xmeme API'});
-})
+// app.get('/',(req,res) =>{
+//   res.status(200).json({owner:'Prateek Divyanshu',version:'0.0.1',message:'Welcome to Xmeme API'});
+// })
 
 
 app.listen(PORT, () =>{
-  console.log(`Backend Server running successfully on ${PORT}....\n`);
+  // console.log(`Backend Server running successfully on ${PORT}....\n`);
 })
