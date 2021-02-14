@@ -33,12 +33,12 @@ export const MemePreview = ({name,caption,url,showMemePreview}) => {
           <div style={{margin:'0.5rem'}}>Name: {name}</div>
           <div style={{margin:'0.5rem'}}>Caption: {caption}</div>
           <div style={{gridColumnStart:'first',gridColumnEnd:'second',margin:'0.5rem'}}>
-          <Button variant="outline-dark"  style={{margin:'0.5rem'}} disabled={true}>
+          <Button variant="dark"  style={{margin:'0.5rem'}} disabled={true}>
               Edit Me
           </Button>
         </div>
         <div style={{gridColumnStart:'first',gridColumnEnd:'second',margin:'0.7rem'}}>
-          <Button variant="outline-danger"  style={{margin:'0.5rem'}} disabled={true}>
+          <Button variant="danger"  style={{margin:'0.5rem'}} disabled={true}>
             Delete
           </Button>
           

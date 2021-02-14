@@ -20,12 +20,12 @@ app.use('/memes',require('./routes/backendRoutes'));
 app.use('/api',require('./routes/apiRoutes'));
 
 
-
+// GET request to home page of the Xmeme application
 // app.get('/',(req,res) =>{
-//   res.status(200).json({owner:'Prateek Divyanshu',version:'0.0.1',message:'Welcome to Xmeme API'});
+//   // res.status(200).json({owner:'Prateek Divyanshu',version:'0.0.1',message:'Welcome to Xmeme API'});
 // })
 
-
+// Starts the server on the PORT port of the localhost
 app.listen(PORT, () =>{
   // console.log(`Backend Server running successfully on ${PORT}....\n`);
 })

@@ -3,11 +3,13 @@ import MemesList from '../cards/MemesList'
 import axios from 'axios';
 import emptyPageGif from '../../static/images/LoadingWebPage.jpg';
 import spinner from '../../static/images/spinner1.jpg';
+import Pagination from '../layouts/Pagination';
+import { Next } from 'react-bootstrap/esm/PageItem';
 
 
 let URL =`http://localhost:8081`;   // local sandbox
 URL = `https://xmeme-prateek-divyanshu.herokuapp.com` // deployed version
-
+let skip  = 0;
 class Memes extends Component {
   constructor(props){
     super(props);
@@ -20,13 +22,15 @@ class Memes extends Component {
     sortBy:'id',
     order:'desc',
     searchMeme:'',
-    skip:0,
+    // skip:0,
     take:5,
-    currentPage:1
+    currentPage:1,
+    totalPages:1,
   }
   componentWillMount(){
     console.log('Memes Page here\n');
     this.getAllMemesByParams();
+    this.getTotalPages();
   }
  
    // Get all memes
@@ -34,16 +38,26 @@ class Memes extends Component {
     this.setState({loading:true});
     const sortBy=this.state.sortBy;
     const order=this.state.order;
-    const skip=this.state.skip;
+    // const skip=this.state.skip;
+    //const skip  =skip;
     const take=this.state.take;
+    console.log(skip+': skip value right now');
     let reqApi = URL+`/api/memes/display?sortBy=${sortBy}&order=${order}&skip=${skip}&take=${take}`;
-
+    console.log(reqApi+'CALL\n');
     return axios.get(reqApi)
               .then((res)=>{console.log(res.data.data); this.setState({loading:false,memes:res.data.data})})
               .catch((err)=>{this.setState({loading:false});console.log(err.message)})
     // const res = await axios.get('http://localhost:8081/memes');
     // console.log(res);
     // this.setState({loading:false,memes:res.data.data});
+  }
+  
+  // Get total pages
+  getTotalPages = async()=>{
+    let reqApi = URL+`/api/memes/totalPages`;
+    axios.get(reqApi)
+            .then((res)=>{this.setState({totalPages:res.data.totalPages} ); console.log(this.state.totalPages)})
+            .catch((err)=>{console.log(err.message)})
   }
   onChange =(e) =>{
     this.setState({[e.target.name]: e.target.value});
@@ -61,6 +75,56 @@ class Memes extends Component {
     }
     this.props.delButtonPress(meme);
     // this.props.hotReload.bind(this);
+  }
+  
+  //page load for pagination
+  onPageLoad =async (e)=>{
+    console.log(e);
+    if(e.target.id=="true"){
+      //console.log('Here\n');
+      
+      skip+=5;
+      try{
+      await this.getAllMemesByParams();
+      }
+      catch(err){
+        console.log(err.message);
+      }
+      this.setState({currentPage:this.state.currentPage+1});
+    }
+    else if(e.target.id=='false'){
+      //console.log('Here\n');
+      
+      skip-=5;
+      try{
+      await this.getAllMemesByParams();
+      }
+      catch(err){
+        console.log(err.message);
+      }
+      this.setState({currentPage:this.state.currentPage-1});
+    }
+    else if(e.target.id=='first'){
+      skip =0;
+      try{
+        await this.getAllMemesByParams();
+        }
+        catch(err){
+          console.log(err.message);
+        }
+        this.setState({currentPage:1});
+    }
+    else if(e.target.id=='last'){
+      skip = Number((this.state.totalPages*5-5));
+      try{
+        await this.getAllMemesByParams();
+        }
+        catch(err){
+          console.log(err.message);
+        }
+        this.setState({currentPage:this.state.totalPages});
+    }
+
   }
 
   render() {
@@ -126,6 +190,21 @@ class Memes extends Component {
         
         )
         }
+        {
+          this.props.memes && 
+          <div style={{display:'grid',gridTemplateColumns:'[first] 2fr [second] 1fr [third] 2fr [fourth]'}}>
+            <div style={{girdColumnStart:'second',gridColumnEnd:'third',textAlign:'center',margin:'1rem'}}>
+              <Pagination 
+              isHome={false} 
+              currentPage={this.state.currentPage} 
+              memes={this.state.memes} 
+              onPageLoad={this.onPageLoad}
+              totalPages={this.state.totalPages}
+              
+              />
+            </div>
+          </div>
+      }
         
       </Fragment>
     )

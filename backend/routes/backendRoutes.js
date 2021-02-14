@@ -6,7 +6,14 @@ const { check, validationResult,param} = require('express-validator');
 
 
 // functions:
-let checkIfIdExistsAndPost = (res,given_id) =>{
+
+// check if ID exists and return memeStored:
+// This function checks if the id already exists in db and sends the response as memeStored or error response
+//PARAMS: res, given_id
+// RES: 200: Returns row of sql table
+// RES: 400: Returns error message if there was error in fetching response from db
+// RES: 404: Returns error if the given_id was not found in database
+let checkIfIdExistsAndReturn = (res,given_id) =>{
   let sql = 'SELECT * from memes where id = ?';
   let params = [given_id];
   return db.get(sql,params,(err,row) =>{
@@ -24,6 +31,13 @@ let checkIfIdExistsAndPost = (res,given_id) =>{
   })
 }
 
+
+
+// getAllMemes:
+// This function returns all the memes present in the database
+//PARAMS: None
+// RES: 200: Returns an array of memes
+// RES: 400: Returns error message if there was error in fetching response from db
 let getAllMemes = (res) =>{
   /* limit 100 */
   var sql = "select * from memes"
@@ -46,6 +60,13 @@ let getAllMemes = (res) =>{
   });
 }
 
+
+
+// postMeme:
+// This function is used to post a  meme to the database
+//PARAMS: res, data =>where data is an object which contains name ,url and caption from the request body
+// RES: 200: Returns the 'id' of the meme which was created
+// RES: 400: Returns error message if there was error in storing response to database
 let postMeme = (res,data) =>{
   let sql = 'INSERT INTO memes (name,url,caption) VALUES(?,?,?)';
   let params =[data.name,data.url,data.caption];
@@ -59,6 +80,13 @@ let postMeme = (res,data) =>{
   })
 }
 
+
+// postIfDuplicateDoesNotExist:
+// A helper function which checks if a duplicate meme exists in database or not
+// PARAMS: req, res
+// RES: 400 : Returns error message if there was error in fetching response from db
+// RES: 409 : Returns error message saying the meme post already exists in database
+// If no error postMeme is called from here
 let postIfDuplicateDoesNotExist = (req,res) =>{
   let {name,url,caption} = req.body;
   //name = name.touppercase();
@@ -77,6 +105,12 @@ let postIfDuplicateDoesNotExist = (req,res) =>{
   })
 }
 
+
+// updateMeme:
+// This function is used to update memes to the database
+// PARAMS: res,name,url,caption,id
+// RES: 400 : Error in updating response to the database
+// RES: 200 : The meme post was successfully updated
 let updateMeme = (res,name,url,caption,id) =>{
   const sql =`UPDATE memes set name = name , url = ? ,  caption = ? WHERE id = ?` ;
   const params = [url,caption,id];
@@ -128,7 +162,11 @@ let patchIfDuplicateDoesNotExist = (res,data,newData) => {
       })
 }
 
-// Delete ID from database
+// deleteIdFrom Database:
+// This helper function is used to delete a meme with given id from the database if it exists
+// PARAMS: res,id
+// RES : 400 : returns error message if there was some internal problem while deleting in database
+// RES : 200 : returns an object with message deleted and changes= No. of deletions made, if changes==0 then the meme with given id did not exist in database 
 let deleteIdFromDatabase = (res,id) =>{
   const sql = 'DELETE FROM memes WHERE id = ?'; 
   return db.run(
@@ -164,12 +202,14 @@ let checkIfIdExistsAndDelete =(res,id) =>{
 }
 
 // Routes
+
+// router.get: /memes => returns an array of memes stored to the user
 router.get('/',async (req,res)=>{
-  //console.log("console log-- GET REQUEST")
+  // console.log("console log-- GET REQUEST")
   return getAllMemes(res);
 })
 
-
+// router.post: /memes => posts a meme with the body parameters if validation results in no error
 router.post('/',[
   check('name')
     .not()
@@ -188,12 +228,13 @@ router.post('/',[
   if(!errors.isEmpty()){
     return res.status(422).json({errors: errors.array()});
   }
-  //console.log("console log-- POST REQUEST");
+  // console.log("console log-- POST REQUEST");
   const {name,url,caption} = req.body;
   const data = {name,url,caption};
   return postIfDuplicateDoesNotExist(req,res);
 })
 
+// router.patch: /memes/:id?url={url}&caption={caption} =>Updates a meme in database with given values
 router.patch('/:id',async (req,res)=>{
   const id = req.params.id;
   const {url,caption} = req.body;
@@ -223,12 +264,15 @@ router.patch('/:id',async (req,res)=>{
 
 })
 
+
+// router.get: /memes/:id => returns the meme with given id if it is present in database
 router.get('/:id',async (req,res)=>{
-  //console.log('GET request single meme');
+  // console.log('GET request single meme');
   const id = req.params.id;
-  return checkIfIdExistsAndPost(res,id);
+  return checkIfIdExistsAndReturn(res,id);
 })
 
+// router.delete: /memes/:id => deletes the meme if meme with id is present in database
 router.delete('/:id',async (req,res) => {
     const id = req.params.id;
     return checkIfIdExistsAndDelete(res,id);
@@ -237,10 +281,5 @@ router.delete('/:id',async (req,res) => {
 module.exports = router;
 
 
-/*
-  curl --location --request POST 'http://localhost:8081/memes' --header 'Content-Type: application/json' --data-raw '{"name": "Parimal Joshi","url": "https://timesofindia.indiatimes.com/thumb/msid-78679348,width-1200,height-900,resizemode-4/.jpg", "caption": "Office Memes"}'
 
-  curl --location --request PATCH 'http://localhost:8081/memes/19' --header 'Content-Type: application/json' --data-raw '{"url": "new_url","caption": "new_caption"}'
-
-*/
 

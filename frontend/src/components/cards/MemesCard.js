@@ -41,12 +41,12 @@ export const MemesCard = ({meme,index,editButtonPress,delButtonPress,incCount,de
       <div style={{margin:'0.5rem'}}>Name: {meme.name}</div>
       <div style={{margin:'0.5rem'}}>Caption: {meme.caption}</div>
       <div style={{gridColumnStart:'first',gridColumnEnd:'second',margin:'0.5rem'}}>
-      <Button variant="outline-dark" onClick={handleShow} style={{margin:'0.5rem'}}>
+      <Button variant="dark" onClick={handleShow} style={{margin:'0.5rem'}}>
           Edit Me
       </Button>
     </div>
     <div style={{gridColumnStart:'first',gridColumnEnd:'second',margin:'0.7rem'}}>
-      <Button variant="outline-danger" onClick={delButtonPress.bind(this,meme)} style={{margin:'0.5rem'}}>
+      <Button variant="danger" onClick={delButtonPress.bind(this,meme)} style={{margin:'0.5rem'}}>
         Delete
       </Button>
       

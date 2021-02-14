@@ -53,8 +53,8 @@ export class AddMeme extends Component {
     return (
       <Fragment >
         <div style={{display:'flex',justifyContent:'flex-end'}} className="container">
-        {this.state.showAddMeme==false && <Button variant="outline-dark" onClick={this.toggleShowAddMeme} style={{margin:'0.5rem'}}>Add Meme</Button>}
-        {this.state.showAddMeme==true && <Button variant="outline-danger" onClick={this.toggleShowAddMeme} style={{margin:'0.5rem'}}>Close X</Button>}
+        {this.state.showAddMeme==false && <Button variant="dark" onClick={this.toggleShowAddMeme} style={{margin:'0.5rem'}}>Add Meme</Button>}
+        {this.state.showAddMeme==true && <Button variant="danger" onClick={this.toggleShowAddMeme} style={{margin:'0.5rem'}}>Close X</Button>}
         </div>
         
         {this.state.showAddMeme && <section className='container' style={{backgroundColor:'whitesmoke',border:'black 0.25rem dotted'}}>
